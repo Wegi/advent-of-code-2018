@@ -50,15 +50,24 @@
   (->> sleep-vecs
        flatten
        frequencies
-       (apply max-key val)
-       key))
+       (apply max-key val)))
 
 (defn magic-number
   [input]
   (let [sleep-times (calculate-sleep input)
         biggest-sloth (max-sleeper sleep-times)
-        lazytime (favorite-naptime (get sleep-times (str biggest-sloth)))]
+        lazytime (key (favorite-naptime (get sleep-times (str biggest-sloth))))]
     (* biggest-sloth lazytime)))
+
+(defn magic-number-2
+  [input]
+  (let [sleep-times (calculate-sleep input)
+        favorite-lazytimes (map (fn [[id vector]] [id (favorite-naptime vector)]) sleep-times)
+        [id [minute _times]] (apply max-key #(last (last %)) favorite-lazytimes)]
+    (* (Integer/parseInt id) minute)))
+
+(magic-number-2 guards)
+;16164
 
 (magic-number guards)
 ;;12169 :lennyface:
