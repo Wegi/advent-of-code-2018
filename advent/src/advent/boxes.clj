@@ -1,0 +1,283 @@
+(ns advent.boxes
+  (:require [clojure.string :as str]))
+
+(defn checksum
+  [input]
+  (let [lines (str/split input #"\n")
+        freqs (map #(set (vals (frequencies %))) lines)
+        twos (count (get (group-by #(% 2) freqs) 2))
+        threes (count (get (group-by #(% 3) freqs) 3))]
+    (* twos threes)))
+
+#_(checksum input)
+;;8398
+
+(defn hamming-distance
+  [s1 s2]
+  (->> (map = s1 s2)
+       (remove true?)
+       (count)))
+
+(defn hamming-one
+  [input]
+  (let [lines (str/split input #"\n")
+        cross (for [x (take (/ (count lines) 2) lines)
+                    y (drop (/ (count lines) 2) lines)]
+                [(hamming-distance x y) [x y]])
+        match-1 (get (into {} cross) 1)]
+    (apply str (remove nil? (map #(when (= %1 %2) %1) (first match-1) (second match-1))))))
+
+#_(hamming-one input)
+;; hhvsdkatysmiqjxunezgwcdpr
+
+(def input
+  "ohvflkatysoimjxbunazgwcdpr
+ohoflkctysmiqjxbufezgwcdpr
+ohvflkatysciqwxfunezgwcdpr
+fhvflyatysmiqjxbunazgwcdpr
+ohvhlkatysmiqjxbunhzgwcdxr
+ohvflbatykmiqjxbunezgscdpr
+ohvflkatasaiqjxbbnezgwcdpr
+ohvflkatyymiqjxrunetgwcdpr
+ohvflkatbsmiqhxbunezgwcdpw
+oheflkytysmiqjxbuntzgwcdpr
+ohvflkatrsmiqjibunezgwcupr
+ohvflkaiysmiqjxbunkzgwkdpr
+ohvilkutysmiqjxbuoezgwcdpr
+phvflkatysmkqjxbulezgwcdpr
+ohvflkatnsmiqjxbznezgpcdpr
+ohvylkatysriqjobunezgwcdpr
+ohvflkatytmiqjxbunezrwcypr
+ohvonkatysmiqjxbunezgwxdpr
+ohvflkatgsmoqjxyunezgwcdpr
+ohvflkbtqsmicjxbunezgwcdpr
+ohvflkatysmgqjqbunezgwcdvr
+ohvtlkatyrmiqjxbunezgwcdpi
+ohvflkatyskovjxbunezgwcdpr
+ohvflkayysmipjxbunezgwcdpu
+ohvalkltysmiqjxbunezgecdpr
+ohvflkatysmiqjxiunezgnndpr
+ohvflkatyomiqjxbbnezgwcdpp
+ohvflkatysmiqjxbuoezgncdpy
+omvflkvtysmiqjxwunezgwcdpr
+ohvflkatynmicjxbunezgwpdpr
+ohvflkatyqmaqjxbunezvwcdpr
+ohbfhkatysmiqjxbunezgwcdqr
+ohvflkatesmiqjvbunezpwcdpr
+ohvflkatysmsqjxiunezgwcdhr
+ohvfjkatysmwqjxbunezgwcddr
+ohvflkanysmiqjxbunwkgwcdpr
+ohqflkatysmiqjxbuuezgwcddr
+ohvflkatysmvqjxbznlzgwcdpr
+ohvflkatysmiqjxbunjzwwqdpr
+ohvfjkatysmiqxxbunezgwcupr
+chvfxkatysmiqjxxunezgwcdpr
+uhvflkatitmiqjxbunezgwcdpr
+ohvflbatysmiqjxbuntzgwcdor
+ohvflkmtysmmqjxbunexgwcdpr
+ohvflsatysmyqjxjunezgwcdpr
+ohvfskatysmiqjjbunezgwcdpg
+ohvflkatysniqjxbunexgwcrpr
+ohvfekatysmiqjxbunedswcdpr
+ohvfltatysmjqjxbunezghcdpr
+ohvflkatydmiqjxvunezggcdpr
+oavflkatysmiqjxtunazgwcdpr
+ohvflkltysmiqjxbuzeugwcdpr
+ohbflkatysmiqjybuuezgwcdpr
+ehvfzkatysmiqjxbuhezgwcdpr
+odvflkatssmiqjxbunezgwcdpj
+ohvflkatysmiqjzbufezgwbdpr
+jhvflkdtysmiqqxbunezgwcdpr
+ohvflkatysmiqjwbunengwcnpr
+ohvfskatysmiqjxbxuezgwcdpr
+ohvflkatysmiqjobvnezgwcrpr
+ohvrlkatysmiqjxbwnezgrcdpr
+ofvflkatysmiqjxbunezpwcdwr
+ohvfxdatyomiqjxbunezgwcdpr
+yhvflkatydmiqjxbubezgwcdpr
+ohvflkatysdiqjxbuneztwcspr
+ohvflkatydmiquxbunezgwcbpr
+ohvflkatysmiqcxbukezgwcdwr
+ohvflkntasmiqjxbunezghcdpr
+lhvflkatysmiqjxbunezqwckpr
+ehifikatysmiqjxbunezgwcdpr
+ohvflkatysmiqjcbutezgwcdpm
+ohvflkatjssiqrxbunezgwcdpr
+oyvflkavysmiqjxlunezgwcdpr
+orvflkgtysmiqjxbukezgwcdpr
+ihvflkatysmiqaxbunpzgwcdpr
+ohvflkatusmiqjxbbnezgwchpr
+ohvflkatysbiqjxvuneugwcdpr
+ohvflkatysmiqjcbungzgwcwpr
+ovvflkatysmidjxbunezgscdpr
+ohvflqatysmiljxbunfzgwcdpr
+ghvfokatysmiqjxbunqzgwcdpr
+nxvflkatysmxqjxbunezgwcdpr
+ohvflkatysmiqjxbexezgwrdpr
+ohvfrkatysmhqjxbuntzgwcdpr
+ohvflkvtysmiqjxocnezgwcdpr
+ohvglkgtysmiqjxnunezgwcdpr
+ohvflkatysmnqjxbunecgwqdpr
+oyvflkatysgiqjxbcnezgwcdpr
+ofvflkatysmiqjxbunfzgwcdpg
+otvflkttysmiqjxbunezgwmdpr
+ohvflkvtysmiqjbbunezgzcdpr
+ahvflkatysyiqjxbunezvwcdpr
+ohiflkatysmydjxbunezgwcdpr
+ohvfwkatysmvqjxbunezwwcdpr
+ohvflkatysbiqjxbunergwodpr
+hhvsdkatysmiqjxbunezgwcdpr
+ihvflkwtysmiqjxbunezgacdpr
+ohvfljatysmiqcxbunuzgwcdpr
+ohvflkatysqiqlwbunezgwcdpr
+ohvflkauysmkqjxwunezgwcdpr
+ohvflkatysmoqjqbunezgwodpr
+ohvslkvtysmipjxbunezgwcdpr
+olvflkatysmiujxbunezgwctpr
+osvflxatysmiqjxbenezgwcdpr
+orvflkhtysmiqjxbinezgwcdpr
+ohcflkatystiqjxbunezbwcdpr
+ohcflkatyfmifjxbunezgwcdpr
+ohvflkatdsmiqjxbrnezgwcdpt
+ohvflkatysmiqjxbwnqzawcdpr
+oevflkakysmiqjxbunezgwcdpt
+ofvflkatysmiqjxbunbqgwcdpr
+ohvflkatysmdqjxbunefqwcdpr
+ohvklkalysmiqjxbunezgwcepr
+ocvflhatysmiqjxbunezzwcdpr
+uhvflkatysmiqmxbunezgwcxpr
+ohvflkatyshikjhbunezgwcdpr
+lbvflkatysmoqjxbunezgwcdpr
+ohvflkatssmuqjxbunezgscdpr
+ohvflkatysmifyxbuvezgwcdpr
+ohvfikatysmiqjxbunezgwfupr
+ohvmlkaiysmiqjxqunezgwcdpr
+ohvflkatysmiqjxiunpzgwcdpo
+lhvflkatysmpqjxbenezgwcdpr
+ohvflkatysmiqjobunengwczpr
+ohoflkatysniqjxbunezgccdpr
+ohvfxkatysmiqjgbunyzgwcdpr
+ohvflkytysmiljxbubezgwcdpr
+hhvsdkatysmiqjxjunezgwcdpr
+ohvflkatysmiqjtuunezgwcdpt
+ohvfdkxtysmiqjubunezgwcdpr
+ohxflkatysmiyjxbunezgwcdhr
+ohvflkatysmiqjibunezgwcppd
+ohvflkatysmihjxbunezgwcdhj
+ohvflkatysmiqjxronezgwcdvr
+ofrflxatysmiqjxbunezgwcdpr
+ohvwlkatysmiqjxounezgscdpr
+ohvflkatcodiqjxbunezgwcdpr
+oqvflkatysmiqjxbunebgwmdpr
+ohvflmatysmisjxbunezqwcdpr
+ovvflkatysmiqjxbuxezgwcdpe
+ohvflkatysmdejxbuneztwcdpr
+hhvflkathsmiqjxbwnezgwcdpr
+ohkflkatlsmsqjxbunezgwcdpr
+ohvflkktysmizjxhunezgwcdpr
+ohzflkatysmiqjrbunezgwcdpj
+ohuflwatysmiqjxbunezgwcdgr
+ohvflkatysmiqvxmunpzgwcdpr
+xhvflkwtysmiqjxbunezgwjdpr
+whvflkatysmiqjxbunezgzcopr
+ohvflkayysmiqjxuznezgwcdpr
+khvflkasysmiqjxbunezgwcdpv
+ohvflkatylmiqjxbpnozgwcdpr
+ohvflkgtysziqjxbunezgwgdpr
+ohvfljaiysmiqjxbuvezgwcdpr
+ohvflkxtyslizjxbunezgwcdpr
+ohzflkatysmiqjxbcnezgwcdar
+ohvflkatysmiqjxbisecgwcdpr
+shvflkatyjmiqjkbunezgwcdpr
+mhvflkatysmiqjxvunezgwcdpk
+ohfflkatysmiqjxbunczgwcppr
+ohvflkatysmiqjkzunezgwcdpc
+ohvflkatysmifjxbuneygwctpr
+ohvflkatysmimjbbunezgwcdpe
+ohvflkatjsciqjxbunezgwcdpa
+ohvxlkatysmitjxbunezswcdpr
+ohvslkatfsmiqjxbunezgwudpr
+ohvflkatysmiqexbugezgwcdnr
+onvflkatysmiqjxkunezgtcdpr
+fhsflkalysmiqjxbunezgwcdpr
+oyvflkatysmiqjobxnezgwcdpr
+ohvflkatysmiqjxbunezswgdvr
+phvflkatyymiqjxvunezgwcdpr
+oivflzutysmiqjxbunezgwcdpr
+ohvflkftysmiqjxbunezkwcopr
+ohvflkatysmwnjxbunezgwcdpp
+ohvflkatysmiqkxcunezgwndpr
+phvklkatysmiqjhbunezgwcdpr
+ohvflrawysmiqjxbunhzgwcdpr
+ohvflkatysmiqjxbunecgwcdig
+ohvflpakysmiqjxbunezgwrdpr
+odvflkatykmiqjxbunezglcdpr
+ohtflkatysiiqjxblnezgwcdpr
+lhvfpkatysmiqjxbupezgwcdpr
+ohvflkatdsmiqjpbunezgwcdps
+ohvflkztysmiqjxvunezgwjdpr
+ohvflbatysmxqoxbunezgwcdpr
+ohvklkaigsmiqjxbunezgwcdpr
+ohvfgkawysmiqjxbunezgwcdur
+ohvflkatyskpqjlbunezgwcdpr
+ohvflkatyqmiqjhbupezgwcdpr
+ohqflkatysmiqjxzonezgwcdpr
+ohxfnkatyymiqjxbunezgwcdpr
+ohmflkatpsmiqjxbunezgwcdpw
+ohvflkatysmiqjibnnewgwcdpr
+vevflkatysmiqjxbunezgwcypr
+ohvflkatydmiqwxbungzgwcdpr
+ohsrlkatysmiqjxbcnezgwcdpr
+ohvflkptyvmiqexbunezgwcdpr
+opzflkatysmiqjxrunezgwcdpr
+ohvflkitysmiqjxcunezgwcmpr
+ohvflkatysmhhjxblnezgwcdpr
+ohvflkatysfiqjxbunrzgwmdpr
+ohvflkatyamibjxbunezgwcdpf
+ohvflkalysmigjxbunezggcdpr
+ohvflkatwsmisjxbunezgdcdpr
+dhvflkatysmlqjxbunszgwcdpr
+ohvflkatysmiqjxbueeygwcbpr
+ohvflkatgsmiqjnbunezhwcdpr
+svvflkatysmiqjxbunezgwckpr
+opvflkatysmiqpxbufezgwcdpr
+ohnvlkatysmiqjxbunezglcdpr
+phvflkutysjiqjxbunezgwcdpr
+ohvflabtysmiqjjbunezgwcdpr
+ouvflkatysmiqjsbunezgwcdpk
+osvflkatysmijjxbunezgwcypr
+owvflkatysmiqjxbukxzgwcdpr
+ohvfliatvsmiljxbunezgwcdpr
+ohvflkatysmiqjxbumezbwtdpr
+ohvflkatyfcicjxbunezgwcdpr
+ohvflkatysmiqldbunezgfcdpr
+oqvflkatysmiqixkunezgwcdpr
+ohvflkatysmiqjxbulezgicdpe
+ohvflkatysmiqjxbuniegwcdpl
+ohvflkatysmiqjwbunbzgwcdhr
+ohvflkatysmiqjdbunezgwwdkr
+ohqflkytysmiqjxbunezgwcdpc
+ohvflkatysmigjxbunezqwwdpr
+ohvfloatysmiqjpbumezgwcdpr
+ohvklkathkmiqjxbunezgwcdpr
+ohvflkstjsmiqjxbunezgwctpr
+ohvvlkatysmiqjxbunewgwcdir
+ohnflkatysmiqjxbunszgwcdlr
+ohvflkatysmnqjxbunezgxcdlr
+ohvfrkatysmiqjxbonezgwcdor
+ihvflkatysmiqjxbuneogwcxpr
+ohvflkatysmiqjxbunecgwcccr
+owvflkatysmivjxbunezgwjdpr
+ohvflkgtysmiqjxbunczhwcdpr
+ohyqlkatysmiqjxbunezgwcypr
+ohvflkatysmiqjvbunezuwcdpw
+ohvflkathsmiqmxbuoezgwcdpr
+ehvjlkajysmiqjxbunezgwcdpr
+ohvflkltysmiqjxblnezgwjdpr
+oovflkvtfsmiqjxbunezgwcdpr
+olvfzkatysmiqjxyunezgwcdpr
+ohvflkatysqitjxbunezgncdpr
+yhvflkatysmkqjxbunazgwcdpr
+zlvolkatysmiqjxbunezgwcdpr
+ohvflpatysmiqjxbunezgwcapb
+ohvflkatysmuqjxbunezgfcdur")
