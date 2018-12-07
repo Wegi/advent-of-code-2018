@@ -57,6 +57,7 @@
    (map fast-react (filtered-combinations polymer))))
 
 #_(find-smallest-polymer polymer)
+;;5310
 
 #_(fast-react polymer)
 #_(react polymer)
