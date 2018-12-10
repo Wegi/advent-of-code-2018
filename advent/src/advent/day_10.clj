@@ -42,12 +42,14 @@
     (for [y (range miny (inc maxy))
           x (range minx (inc maxx))]
       (do (if (= x maxx)
-            "\n"
+            (if (set-points [x y])
+              "#\n"
+              ".\n")
             (if (set-points [x y])
               "#"
               "."))))))
 
-(spit "solutions" (apply str (plot (tick testdata 10369))))
-(bounds (tick testdata 10369))
+#_(spit "solutions" (apply str (plot (tick testdata 10369))))
+#_(bounds (tick testdata 10369))
 
-(tick testdata)
+#_(tick testdata)
