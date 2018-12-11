@@ -46,7 +46,6 @@
         search-space (for [x (range 1 maxcoord)
                            y (range 1 maxcoord)]
                        [x y])]
-    (println "Building size: " size)
     (into {}
           (map (fn [[x y]]
                  (let [square (for [sx (range x (+ x size))
@@ -67,7 +66,9 @@
 #_(time (part-1 grid serial possible-squares))
 ;; [21 37]
 
-
+(def pg (powergrid grid serial))
+#_(apply max-key val (flexible-powersquare 12 pg))
+;;160, 12 not enough
 
 
 (defn part-2
@@ -79,3 +80,4 @@
      (range 1 301))))
 
 #_(time (part-2 grid serial))
+
