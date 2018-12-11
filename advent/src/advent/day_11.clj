@@ -46,6 +46,7 @@
         search-space (for [x (range 1 maxcoord)
                            y (range 1 maxcoord)]
                        [x y])]
+    (println "Building size: " size)
     (into {}
           (map (fn [[x y]]
                  (let [square (for [sx (range x (+ x size))
@@ -63,15 +64,18 @@
        (apply max-key val)
        key))
 
-(time (part-1 grid serial possible-squares))
+#_(time (part-1 grid serial possible-squares))
 ;; [21 37]
 
 
 
 
-#_(defn part-2
+(defn part-2
   [grid serial]
+  (let [powermap (powergrid grid serial)]
+    (map
+     (fn [size]
+       [size (apply max-key val (flexible-powersquare size powermap))])
+     (range 1 301))))
 
-  (map
-   (fn [])
-   grid))
+#_(time (part-2 grid serial))
