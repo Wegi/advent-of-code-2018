@@ -66,17 +66,18 @@
 #_(time (part-1 grid serial possible-squares))
 ;; [21 37]
 
-(def pg (powergrid grid serial))
+#_(def pg (powergrid grid serial))
 #_(apply max-key val (flexible-powersquare 12 pg))
 ;;160, 12 not enough
 
-
+(set! *unchecked-math* true)
 (defn part-2
   [grid serial]
   (let [powermap (powergrid grid serial)]
-    (map
+    (pmap
      (fn [size]
-       [size (apply max-key val (flexible-powersquare size powermap))])
+       (println "Starting to calculate " size)
+       [size (time (apply max-key val (flexible-powersquare size powermap)))])
      (range 1 301))))
 
 #_(time (part-2 grid serial))
